@@ -9,6 +9,9 @@ on:
       backend_branch:
         type: string
         required: true
+    secrets:
+      GH_PAT:
+        required: true
 
 permissions:
   contents: read
@@ -31,7 +34,7 @@ jobs:
           repository: bitovi/aa-alpha-web
           ref: ${{ inputs.frontend_branch }}
           path: frontend
-          token: ${{ secrets.GITHUB_TOKEN }}
+          token: ${{ secrets.GH_PAT }}
 
       # Checkout the backend repo (aa-alpha-engine)
       - name: Checkout backend
@@ -40,7 +43,7 @@ jobs:
           repository: bitovi/aa-alpha-engine
           ref: ${{ inputs.backend_branch }}
           path: backend
-          token: ${{ secrets.GITHUB_TOKEN }}
+          token: ${{ secrets.GH_PAT }}
 
       - uses: actions/setup-node@v4
         with:
