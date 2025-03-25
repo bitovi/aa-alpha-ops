@@ -7,13 +7,13 @@ services:
     container_name: aa-alpha-web
     build:
       dockerfile: ./Dockerfile.builder
-      context: ./frontend
+      context: ../frontend
     ports:
       - "3000:3000"
 
   aa-alpha-engine:
     build:
-      context: ./backend
+      context: ../backend
       target: development
     command: sh -c "npx prisma generate && npm run dev"
     environment:
