@@ -28,7 +28,7 @@ jobs:
           echo "Backend branch: ${{ inputs.backend_branch }}"
 
       # Checkout the current repo to get docker-compose.yml
-      - name: Checkout current repo
+      - name: Checkout OPs repo
         uses: actions/checkout@v4
         with:
           repository: bitovi/aa-alpha-ops
