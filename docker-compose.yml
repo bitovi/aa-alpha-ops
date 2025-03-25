@@ -1,0 +1,50 @@
+networks:
+  alpha_engine:
+    driver: bridge
+
+services:
+  annuity-assurance-direct:
+    container_name: aa-alpha-web
+    build:
+      dockerfile: ./Dockerfile.builder
+      context: ./frontend
+    ports:
+      - "3000:3000"
+
+  aa-alpha-engine:
+    build:
+      context: ./backend
+      target: development
+    command: sh -c "npx prisma generate && npm run dev"
+    environment:
+      - DATABASE_URL=postgresql://postgres:postgres@postgres:5432/alpha_engine
+      - API_URL=http://aa-alpha-engine:4000
+    depends_on:
+      - postgres
+    ports:
+      - "4000:4000"
+    networks:
+      - alpha_engine
+
+  postgres:
+    image: postgres:16-alpine
+    restart: always
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    ports:
+      - "5432:5432"
+    environment:
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=postgres
+      - POSTGRES_DB=alpha-engine
+    networks:
+      - alpha_engine
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
+volumes:
+  postgres_data:
+  node_modules: 
