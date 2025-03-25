@@ -1,0 +1,148 @@
+name: Integration Tests
+
+on:
+  workflow_call:
+    inputs:
+      frontend_branch:
+        type: string
+        required: true
+      backend_branch:
+        type: string
+        required: true
+
+permissions:
+  contents: read
+
+jobs:
+  run-integration-tests:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Resolve calling repo
+        run: |
+          echo "Calling repository: ${{ github.repository }}"
+          echo "Frontend branch: ${{ inputs.frontend_branch }}"
+          echo "Backend branch: ${{ inputs.backend_branch }}"
+
+      # Checkout the frontend repo (aa-alpha-web)
+      - name: Checkout frontend
+        uses: actions/checkout@v4
+        with:
+          repository: bitovi/aa-alpha-web
+          ref: ${{ inputs.frontend_branch }}
+          path: frontend
+          token: ${{ secrets.GITHUB_TOKEN }}
+
+      # Checkout the backend repo (aa-alpha-engine)
+      - name: Checkout backend
+        uses: actions/checkout@v4
+        with:
+          repository: bitovi/aa-alpha-engine
+          ref: ${{ inputs.backend_branch }}
+          path: backend
+          token: ${{ secrets.GITHUB_TOKEN }}
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version-file: "./frontend/.nvmrc"
+      - name: Build Frontend .env
+        run: |
+          cd ./frontend
+
+          npm ci
+
+          echo "NEXT_PUBLIC_AA_ALPHA_ENGINE_URL=http://aa-alpha-engine:4000" > .env
+          echo "NEXT_PUBLIC_AWS_RUM_IDENTITY_POOL=${{ vars.AWS_RUM_IDENTITY_POOL }}" >> .env
+          echo "NEXT_PUBLIC_AWS_RUM_ENDPOINT=${{ vars.AWS_RUM_ENDPOINT }}" >> .env
+          echo "NEXT_PUBLIC_AWS_APPLICATION_ID=${{ vars.AWS_APPLICATION_ID }}" >> .env
+          echo "NEXT_PUBLIC_AWS_APPLICATION_REGION=${{ vars.AWS_APPLICATION_REGION }}" >> .env
+          echo "NEXT_PUBLIC_AA_ALPHA_SHA=${{ github.sha }}" >> .env
+          echo "PLAYWRIGHT_DISABLE_WEB_SERVER=true"
+          echo ".env file created"
+          cat .env
+          cd ..
+      - name: Run projects and tests
+        run: |
+          ls -la ./frontend
+          ls -la ./backend
+
+          # cd ./frontend
+          # docker compose up -d
+
+          # cd ../backend
+          # docker compose up -d
+
+          # cd ./frontend
+          # npm run e2e:integration
+      - name: Create Docker Compose File
+        run: |
+          cat << EOF > docker-compose.yml
+          networks:
+            alpha_engine:
+              driver: bridge
+
+          services:
+            annuity-assurance-direct:
+              container_name: aa-alpha-web
+              build:
+                dockerfile: ./Dockerfile.builder
+                context: ./frontend
+              ports:
+                - "3000:3000"
+
+            aa-alpha-engine:
+              build:
+                context: ./backend
+                target: development
+              command: sh -c "npx prisma generate && npm run dev"
+              environment:
+                - DATABASE_URL=postgresql://postgres:postgres@postgres:5432/alpha_engine
+                - API_URL=http://aa-alpha-engine:4000
+              depends_on:
+                - postgres
+              ports:
+                - "4000:4000"
+              networks:
+                - alpha_engine
+
+            postgres:
+              image: postgres:16-alpine
+              restart: always
+              volumes:
+                - postgres_data:/var/lib/postgresql/data
+              ports:
+                - "5432:5432"
+              environment:
+                - POSTGRES_USER=postgres
+                - POSTGRES_PASSWORD=postgres
+                - POSTGRES_DB=alpha-engine
+              networks:
+                - alpha_engine
+              healthcheck:
+                test: ["CMD-SHELL", "pg_isready -U postgres"]
+                interval: 5s
+                timeout: 5s
+                retries: 5
+
+          volumes:
+            postgres_data:
+            node_modules:
+
+          EOF
+      - name: Verify Docker Compose File
+        run: cat docker-compose.yml
+      - name: Check file structure
+        run: ls -la ./frontend
+      - name: Run and test
+        run: |
+          docker compose up -d
+
+          cd ./frontend
+          npx playwright install --with-deps
+          npm run e2e:integration
+      - uses: actions/upload-artifact@v4
+        if: ${{ !cancelled() }}
+        with:
+          name: playwright-report
+          path: frontend/playwright-report/
+          retention-days: 30
