@@ -31,7 +31,10 @@ jobs:
       - name: Checkout current repo
         uses: actions/checkout@v4
         with:
+          repository: bitovi/aa-alpha-ops
+          ref: main
           path: ops
+          token: ${{ secrets.GH_PAT }}
 
       # Checkout the frontend repo (aa-alpha-web)
       - name: Checkout frontend
