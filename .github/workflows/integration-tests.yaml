@@ -19,7 +19,7 @@ permissions:
 jobs:
   run-integration-tests:
     runs-on: ubuntu-latest
-
+    environment: staging
     steps:
       - name: Resolve calling repo
         run: |
