@@ -69,8 +69,8 @@ jobs:
           echo "NEXT_PUBLIC_AWS_APPLICATION_ID=${{ vars.AWS_APPLICATION_ID }}" >> .env
           echo "NEXT_PUBLIC_AWS_APPLICATION_REGION=${{ vars.AWS_APPLICATION_REGION }}" >> .env
           echo "NEXT_PUBLIC_AA_ALPHA_SHA=${{ github.sha }}" >> .env
-          echo "NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY=pk_test_ZmFjdHVhbC1zaGFkLTc1LmNsZXJrLmFjY291bnRzLmRldiQ" >> .env
-          echo "CLERK_SECRET_KEY=sk_test_G4609rlPUH3e1pEobGW4vBIaAqYvGQs4Vb3VQzbaYV" >> .env
+          echo "NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY=${{ vars.CLERK_PUBLISHABLE_KEY }}" >> .env
+          echo "CLERK_SECRET_KEY=${{ secrets.CLERK_SECRET_KEY }}" >> .env
           echo "PLAYWRIGHT_DISABLE_WEB_SERVER=true" >> .env
           echo ".env file created"
           cat .env
