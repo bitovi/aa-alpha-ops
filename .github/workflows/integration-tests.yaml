@@ -75,17 +75,19 @@ jobs:
           echo ".env file created"
           cat .env
           cd ..
-      - name: Run and test
+      - name: Run docker compose
         run: |
           cd ops
           docker compose up -d
-
-          cd ../frontend
-          npx playwright install --with-deps
-          npm run e2e:integration
         env:
           CANNEX_SOAP_USERNAME: ${{ secrets.CANNEX_SOAP_USERNAME }}
           CANNEX_SOAP_PASSWORD: ${{ secrets.CANNEX_SOAP_PASSWORD }}
+
+      - name: Run integration tests
+        run: |
+          cd ../frontend
+          npx playwright install --with-deps
+          npm run e2e:integration
 
       - uses: actions/upload-artifact@v4
         if: ${{ !cancelled() }}
