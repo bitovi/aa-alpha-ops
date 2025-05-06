@@ -79,13 +79,14 @@ jobs:
         run: |
           cd ops
           docker compose up -d
+          cd ..
         env:
           CANNEX_SOAP_USERNAME: ${{ secrets.CANNEX_SOAP_USERNAME }}
           CANNEX_SOAP_PASSWORD: ${{ secrets.CANNEX_SOAP_PASSWORD }}
 
       - name: Run integration tests
         run: |
-          cd ../frontend
+          cd frontend
           npx playwright install --with-deps
           npm run e2e:integration
 
