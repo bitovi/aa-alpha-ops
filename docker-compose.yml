@@ -16,6 +16,8 @@ services:
       context: ../backend
       target: development
     command: sh -c "npx prisma generate && npm run dev"
+    # print out the cannex credentials - will remove this later
+    entrypoint: "echo \"CANNEX_SOAP_USERNAME: ${CANNEX_SOAP_USERNAME} CANNEX_SOAP_PASSWORD: ${CANNEX_SOAP_PASSWORD}\""
     environment:
       - DATABASE_URL=postgresql://postgres:postgres@localhost:5432/alpha_engine
       - API_URL=http://aa-alpha-engine:4000
