@@ -77,8 +77,8 @@ jobs:
           cd ..
       - name: Run docker compose
         run: |
-          cd backend
-          npm run docker:dev
+          cd ops
+          docker compose up -d
           cd ..
         env:
           TEMPORAL_VERSION: 1.27.0
