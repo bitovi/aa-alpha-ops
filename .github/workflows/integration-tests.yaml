@@ -77,8 +77,8 @@ jobs:
           cd ..
       - name: Run docker compose
         run: |
-          cd ops
-          docker compose up -d
+          cd backend
+          npm run docker:dev
           cd ..
         env:
           CANNEX_SOAP_USERNAME: ${{ secrets.CANNEX_SOAP_USERNAME }}
