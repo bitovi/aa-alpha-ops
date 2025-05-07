@@ -63,7 +63,7 @@ jobs:
 
           npm ci
 
-          echo "NEXT_PUBLIC_AA_ALPHA_ENGINE_URL=http://aa-alpha-engine:4000" > .env
+          echo "NEXT_PUBLIC_AA_ALPHA_ENGINE_URL=http://localhost:4000" > .env
           echo "NEXT_PUBLIC_AWS_RUM_IDENTITY_POOL=${{ vars.AWS_RUM_IDENTITY_POOL }}" >> .env
           echo "NEXT_PUBLIC_AWS_RUM_ENDPOINT=${{ vars.AWS_RUM_ENDPOINT }}" >> .env
           echo "NEXT_PUBLIC_AWS_APPLICATION_ID=${{ vars.AWS_APPLICATION_ID }}" >> .env
@@ -83,7 +83,7 @@ jobs:
           npm ci
 
           echo "DATABASE_URL=postgresql://postgres:postgres@localhost:5432/alpha_engine" > .env
-          echo "API_URL=http://locahost:4000" >> .env
+          echo "API_URL=http://localhost:4000" >> .env
           echo "CANNEX_SOAP_ENDPOINT_URL=https://wwwdev.cannex.com/devext/CANX" >> .env
           echo "CANNEX_SOAP_USERNAME=${{ secrets.CANNEX_SOAP_USERNAME }}" >> .env
           echo "CANNEX_SOAP_PASSWORD=${{ secrets.CANNEX_SOAP_PASSWORD }}" >> .env
