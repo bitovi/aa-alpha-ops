@@ -11,42 +11,84 @@ services:
     ports:
       - "3000:3000"
 
-  aa-alpha-engine:
+  aa-api:
     build:
       context: ../backend
       target: development
-    command: sh -c "npx prisma generate && npx prisma migrate deploy && npm run dev"
-    environment:
-      - DATABASE_URL=postgresql://postgres:postgres@localhost:5432/alpha-engine
-      - API_URL=http://aa-alpha-engine:4000
-      - CANNEX_SOAP_ENDPOINT_URL=https://wwwdev.cannex.com/devext/CANX
-      - CANNEX_SOAP_USERNAME=${CANNEX_SOAP_USERNAME}
-      - CANNEX_SOAP_PASSWORD=${CANNEX_SOAP_PASSWORD}
+    command: sh -c "npx prisma generate && npx prisma migrate dev && npm run dev"
+    env_file:
+      - ../backend/.env
     depends_on:
-      - postgres
+      postgres:
+        condition: service_healthy
     ports:
       - "4000:4000"
+    extra_hosts:
+      - "localhost:host-gateway"
     networks:
       - alpha_engine
+    environment:
+      - NODE_ENV=development
+      - PORT=4000
 
   postgres:
     image: postgres:16-alpine
-    restart: always
-    volumes:
-      - postgres_data:/var/lib/postgresql/data
     ports:
       - "5432:5432"
+    networks:
+      - alpha_engine
     environment:
       - POSTGRES_USER=postgres
       - POSTGRES_PASSWORD=postgres
-      - POSTGRES_DB=alpha-engine
-    networks:
-      - alpha_engine
+      - POSTGRES_DB=alpha_engine
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
     healthcheck:
       test: ["CMD-SHELL", "pg_isready -U postgres"]
       interval: 5s
       timeout: 5s
       retries: 5
+
+  temporal:
+    container_name: temporal
+    depends_on:
+      - postgres
+    environment:
+      - DB=postgres12
+      - DB_PORT=5432
+      - POSTGRES_USER=postgres
+      - POSTGRES_PWD=postgres
+      - POSTGRES_SEEDS=postgres
+    image: temporalio/auto-setup:1.27.0
+    networks:
+      - alpha_engine
+    ports:
+      - 7233:7233
+
+  temporal-admin-tools:
+    container_name: temporal-admin-tools
+    depends_on:
+      - temporal
+    environment:
+      - TEMPORAL_ADDRESS=temporal:7233
+      - TEMPORAL_CLI_ADDRESS=temporal:7233
+    image: temporalio/admin-tools:1.27.0
+    networks:
+      - alpha_engine
+    stdin_open: true
+    tty: true
+  temporal-ui:
+    container_name: temporal-ui
+    depends_on:
+      - temporal
+    environment:
+      - TEMPORAL_ADDRESS=temporal:7233
+      - TEMPORAL_CORS_ORIGINS=http://localhost:3000
+    image: temporalio/ui:2.34.0
+    networks:
+      - alpha_engine
+    ports:
+      - 8080:8080
 
 volumes:
   postgres_data:

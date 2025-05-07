@@ -75,6 +75,22 @@ jobs:
           echo ".env file created"
           cat .env
           cd ..
+
+      - name: Build Backend .env
+        run: |
+          cd ./backend
+
+          npm ci
+
+          echo "DATABASE_URL=postgresql://postgres:postgres@localhost:5432/alpha_engine" > .env
+          echo "API_URL=http://locahost:4000" >> .env
+          echo "CANNEX_SOAP_ENDPOINT_URL=https://wwwdev.cannex.com/devext/CANX" >> .env
+          echo "CANNEX_SOAP_USERNAME=${{ secrets.CANNEX_SOAP_USERNAME }}" >> .env
+          echo "CANNEX_SOAP_PASSWORD=${{ secrets.CANNEX_SOAP_PASSWORD }}" >> .env
+          echo ".env file created"
+          cat .env
+          cd ..
+
       - name: Run docker compose
         run: |
           cd ops
