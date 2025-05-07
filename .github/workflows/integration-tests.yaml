@@ -81,8 +81,9 @@ jobs:
           npm run docker:dev
           cd ..
         env:
-          CANNEX_SOAP_USERNAME: ${{ secrets.CANNEX_SOAP_USERNAME }}
-          CANNEX_SOAP_PASSWORD: ${{ secrets.CANNEX_SOAP_PASSWORD }}
+          TEMPORAL_VERSION: 1.27.0
+          TEMPORAL_ADMINTOOLS_VERSION: 1.27.0
+          TEMPORAL_UI_VERSION: 2.34.0
 
       - name: Run integration tests
         run: |
