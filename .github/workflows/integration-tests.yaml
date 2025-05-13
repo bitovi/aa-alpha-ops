@@ -91,7 +91,7 @@ jobs:
           echo "CANNEX_FTP_USER=${{ secrets.CANNEX_FTP_USER }}" >> .env
           echo "CANNEX_FTP_PASSWORD=${{ secrets.CANNEX_FTP_PASSWORD }}" >> .env
           echo "INDEX_STANDARD_API_KEY=${{ secrets.INDEX_STANDARD_API_KEY }}" >> .env
-          
+
           echo ".env file created"
           cat .env
           cd ..
@@ -105,6 +105,16 @@ jobs:
           TEMPORAL_VERSION: 1.27.0
           TEMPORAL_ADMINTOOLS_VERSION: 1.27.0
           TEMPORAL_UI_VERSION: 2.34.0
+
+      - name: Run temporal worker
+        run: |
+          cd backend
+          npm ci
+          npx prisma generate
+          npm run temporal:run:worker &
+          npm run temporal:run:cannex-myga &
+          npm run temporal:run:cannex-fia &
+          cd ..  
 
       - name: Run integration tests
         run: |
