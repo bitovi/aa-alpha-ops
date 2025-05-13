@@ -110,16 +110,10 @@ jobs:
         run: |
           cd backend
           npx prisma generate
-          npm run temporal:worker:dev &
-          npm run temporal:run:cannex-myga &
-          npm run temporal:run:cannex-fia &
+          npm run temporal:run:cannex-myga
+          npm run temporal:run:cannex-fia
+          npm run temporal:worker:dev 
           cd ..
-
-      - name: Wait for cannex migrations to finish
-        uses: GuillaumeFalourd/wait-sleep-action@v1
-        with:
-          time: '60'
-        
       - name: Run integration tests
         run: |
           cd frontend
