@@ -111,7 +111,7 @@ jobs:
           cd backend
           npm ci
           npx prisma generate
-          npm run temporal:run:worker &
+          npm run temporal:worker:dev &
           npm run temporal:run:cannex-myga &
           npm run temporal:run:cannex-fia &
           cd ..  
