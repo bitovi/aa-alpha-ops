@@ -112,7 +112,7 @@ jobs:
           npx prisma generate
           npm run temporal:run:cannex-myga
           npm run temporal:run:cannex-fia
-          npm run temporal:worker:dev 
+          npm run temporal:worker:dev & 
           cd ..
       - name: Run integration tests
         run: |
