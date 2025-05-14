@@ -90,8 +90,6 @@ jobs:
           echo "CANNEX_FTP_HOST=${{ secrets.CANNEX_FTP_HOST }}" >> .env
           echo "CANNEX_FTP_USER=${{ secrets.CANNEX_FTP_USER }}" >> .env
           echo "CANNEX_FTP_PASSWORD=${{ secrets.CANNEX_FTP_PASSWORD }}" >> .env
-          echo "INDEX_STANDARD_API_KEY=${{ secrets.INDEX_STANDARD_API_KEY }}" >> .env
-
           echo ".env file created"
           cat .env
           cd ..
