@@ -87,7 +87,7 @@ jobs:
           echo "CANNEX_SOAP_ENDPOINT_URL=https://wwwdev.cannex.com/devext/CANX" >> .env
           echo "CANNEX_SOAP_USERNAME=${{ secrets.CANNEX_SOAP_USERNAME }}" >> .env
           echo "CANNEX_SOAP_PASSWORD=${{ secrets.CANNEX_SOAP_PASSWORD }}" >> .env
-          echo "CANNEX_FTP_HOST=${{ secrets.CANNEX_FTP_HOST }}" >> .env
+          echo "CANNEX_FTP_HOST=${{ vars.CANNEX_FTP_HOST }}" >> .env
           echo "CANNEX_FTP_USER=${{ secrets.CANNEX_FTP_USER }}" >> .env
           echo "CANNEX_FTP_PASSWORD=${{ secrets.CANNEX_FTP_PASSWORD }}" >> .env
           echo "CANNEX_PROD_SOAP_ENDPOINT_URL=${{ vars.CANNEX_PROD_SOAP_ENDPOINT_URL }}" >> .env
