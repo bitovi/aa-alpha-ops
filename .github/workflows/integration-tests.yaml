@@ -107,6 +107,12 @@ jobs:
           TEMPORAL_ADMINTOOLS_VERSION: 1.27.0
           TEMPORAL_UI_VERSION: 2.34.0
 
+      - name: Run temporal worker and api
+        run: |
+          cd backend
+          npm run temporal:worker:dev &
+          npm run dev
+
       - name: Run integration tests
         run: |
           cd frontend
