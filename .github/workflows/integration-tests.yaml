@@ -102,6 +102,12 @@ jobs:
           cd ops
           docker compose up -d
           cd ..
+
+      - name: Run temporal worker
+        run: |
+          cd backend
+          npm run temporal:worker:dev
+          cd ..
         env:
           TEMPORAL_VERSION: 1.27.0
           TEMPORAL_ADMINTOOLS_VERSION: 1.27.0
