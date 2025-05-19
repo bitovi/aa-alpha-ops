@@ -106,6 +106,11 @@ jobs:
           TEMPORAL_VERSION: 1.27.0
           TEMPORAL_ADMINTOOLS_VERSION: 1.27.0
           TEMPORAL_UI_VERSION: 2.34.0
+
+      - name: Wait for cannex migrations to finish
+        uses: GuillaumeFalourd/wait-sleep-action@v1
+        with:
+          time: '60'
       - name: Run integration tests
         run: |
           cd frontend

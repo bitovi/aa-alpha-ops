@@ -20,7 +20,7 @@ services:
       - /bin/sh
       - -c 
       - |
-        npx prisma migrate reset --force
+        npx prisma migrate dev
         npx prisma generate
         npx prisma db seed
         npm run temporal:run:cannex-myga
