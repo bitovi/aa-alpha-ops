@@ -25,6 +25,8 @@ services:
         npx prisma db seed
         npm run temporal:run:cannex-myga
         npm run temporal:run:cannex-fia
+        npm run temporal:run:import-fia-forecasts
+        npm run temporal:run:transform-product-families
         npm run temporal:worker:dev
     env_file:
       - ../backend/.env
