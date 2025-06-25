@@ -100,7 +100,6 @@ jobs:
           echo ".env file created"
           cat .env
           cd ..
-
       - name: Run docker compose
         run: |
           cd ops
@@ -112,6 +111,12 @@ jobs:
           TEMPORAL_UI_VERSION: 2.34.0
           NAMESPACE: ${{ vars.NAMESPACE }}
 
+      - name: Import FIA cannex data
+        run: |
+          cd backend
+          npm run temporal:run:cannex-fia
+          cd ..
+          
       - name: Wait for cannex fia migrations to finish
         uses: GuillaumeFalourd/wait-sleep-action@v1
         with:
@@ -121,7 +126,6 @@ jobs:
         run: |
           cd backend
           npm run temporal:run:cannex-myga
-          npm run temporal:worker:dev &
           cd ..
       - name: Wait for cannex myga migrations to finish
         uses: GuillaumeFalourd/wait-sleep-action@v1
