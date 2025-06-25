@@ -111,22 +111,28 @@ jobs:
           TEMPORAL_UI_VERSION: 2.34.0
           NAMESPACE: ${{ vars.NAMESPACE }}
 
-      - name: Import FIA cannex data
-        run: |
-          cd backend
-          npm run temporal:run:cannex-fia
-          cd ..
+      - name: Import Cannex FIA XML data
+        run: npm run temporal:run:cannex-fia
+        env:
+          DATABASE_URL: postgresql://postgres:postgres@localhost:5432/alpha_engine
+          INDEX_STANDARD_API_KEY: ${{ secrets.INDEX_STANDARD_API_KEY }}
+          NAMESPACE: ${{ vars.NAMESPACE }}
+          TEMPORAL_CLOUD_API_KEY: ${{ secrets.TEMPORAL_CLOUD_API_KEY }}
+          TEMPORAL_SERVER: ${{ vars.TEMPORAL_SERVER }}
           
       - name: Wait for cannex fia migrations to finish
         uses: GuillaumeFalourd/wait-sleep-action@v1
         with:
           time: '60'
 
-      - name: Run cannex myga migrations
-        run: |
-          cd backend
-          npm run temporal:run:cannex-myga
-          cd ..
+      - name: Import Cannex MYGA XML data
+        run: npm run temporal:run:cannex-myga
+        env:
+          DATABASE_URL: postgresql://postgres:postgres@localhost:5432/alpha_engine
+          INDEX_STANDARD_API_KEY: ${{ secrets.INDEX_STANDARD_API_KEY }}
+          NAMESPACE: ${{ vars.NAMESPACE }}
+          TEMPORAL_CLOUD_API_KEY: ${{ secrets.TEMPORAL_CLOUD_API_KEY }}
+          TEMPORAL_SERVER: ${{ vars.TEMPORAL_SERVER }}
       - name: Wait for cannex myga migrations to finish
         uses: GuillaumeFalourd/wait-sleep-action@v1
         with:
