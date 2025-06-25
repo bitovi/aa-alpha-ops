@@ -96,6 +96,7 @@ jobs:
           echo "INDEX_STANDARD_API_BASE_URL=${{ vars.INDEX_STANDARD_API_BASE_URL }}" >> .env
           echo "INDEX_STANDARD_API_KEY=${{ secrets.INDEX_STANDARD_API_KEY }}" >> .env
           echo "TEMPORAL_CLOUD_API_KEY=${{ secrets.TEMPORAL_CLOUD_API_KEY }}" >> .env
+          echo "NAMESPACE=${{ vars.NAMESPACE }}" >> .env
           echo ".env file created"
           cat .env
           cd ..
@@ -110,10 +111,21 @@ jobs:
           TEMPORAL_ADMINTOOLS_VERSION: 1.27.0
           TEMPORAL_UI_VERSION: 2.34.0
 
-      - name: Wait for cannex migrations to finish
+      - name: Wait for cannex fia migrations to finish
         uses: GuillaumeFalourd/wait-sleep-action@v1
         with:
           time: '60'
+
+      - name: Run cannex myga migrations
+        run: |
+          cd backend
+          npm run temporal:run:cannex-myga
+          npm run temporal:worker:dev &
+          cd ..
+      - name: Wait for cannex myga migrations to finish
+        uses: GuillaumeFalourd/wait-sleep-action@v1
+        with:
+          time: '30'
       - name: Run integration tests
         run: |
           cd frontend
