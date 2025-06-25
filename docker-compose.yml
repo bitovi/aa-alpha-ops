@@ -7,14 +7,14 @@ services:
     container_name: aa-alpha-web
     build:
       dockerfile: ./Dockerfile.builder
-      context: ../aa-alpha-web
+      context: ../frontend
     ports:
       - "3000:3000"
 
   temporal-workflows:
     container_name: temporal-workflows
     build:
-      context: ../aa-alpha-engine
+      context: ../backend
       target: development
     command:
       - /bin/sh
@@ -25,7 +25,7 @@ services:
         npm run temporal:run:cannex-fia
         npm run temporal:worker:dev
     env_file:
-      - ../aa-alpha-engine/.env
+      - ../backend/.env
     depends_on:
       postgres:
         condition: service_healthy
@@ -36,11 +36,11 @@ services:
 
   aa-api:
     build:
-      context: ../aa-alpha-engine
+      context: ../backend
       target: development
     command: sh -c "npx prisma generate && npm run dev"
     env_file:
-      - ../aa-alpha-engine/.env
+      - ../backend/.env
     depends_on:
       postgres:
         condition: service_healthy
