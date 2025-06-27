@@ -110,16 +110,6 @@ jobs:
           TEMPORAL_ADMINTOOLS_VERSION: 1.27.0
           TEMPORAL_UI_VERSION: 2.34.0
 
-      - name: Run temporal migrations
-        run: |
-          cd backend
-          npx prisma migrate dev
-          npx prisma generate
-          npm run db:seed
-          npm run temporal:run:cannex-fia
-          npm run temporal:run:cannex-myga &&
-          npm run temporal:worker:dev
-
       - name: Wait for cannex migrations to finish
         uses: GuillaumeFalourd/wait-sleep-action@v1
         with:

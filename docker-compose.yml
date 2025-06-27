@@ -11,29 +11,30 @@ services:
     ports:
       - "3000:3000"
 
-  # temporal-workflows:
-  #   container_name: temporal-workflows
-  #   build:
-  #     context: ../backend
-  #     target: development
-  #   command:
-  #     - /bin/sh
-  #     - -c 
-  #     - |
-  #       npx prisma migrate dev
-  #       npx prisma generate
-  #       npm run temporal:run:cannex-fia
-  #       npm run temporal:run:cannex-myga
-  #       npm run temporal:worker:dev
-  #   env_file:
-  #     - ../backend/.env
-  #   depends_on:
-  #     postgres:
-  #       condition: service_healthy
-  #   extra_hosts:
-  #     - "localhost:host-gateway"
-  #   networks:
-  #     - alpha_engine
+  temporal-workflows:
+    container_name: temporal-workflows
+    build:
+      context: ../backend
+      target: development
+    command:
+      - /bin/sh
+      - -c 
+      - |
+        npx prisma migrate dev
+        npx prisma generate
+        npm run db:seed
+        npm run temporal:run:cannex-fia
+        npm run temporal:run:cannex-myga
+        npm run temporal:worker:dev
+    env_file:
+      - ../backend/.env
+    depends_on:
+      postgres:
+        condition: service_healthy
+    extra_hosts:
+      - "localhost:host-gateway"
+    networks:
+      - alpha_engine
 
   aa-api:
     build:
