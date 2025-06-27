@@ -115,6 +115,7 @@ jobs:
           cd backend
           npx prisma migrate dev
           npx prisma generate
+          npm run db:seed
           npm run temporal:run:cannex-fia
           npm run temporal:run:cannex-myga &&
           npm run temporal:worker:dev
