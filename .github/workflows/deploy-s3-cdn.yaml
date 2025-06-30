@@ -23,3 +23,4 @@ jobs:
               tf_state_bucket: 'annuity-association-static-assets'
 
               aws_site_cdn_enabled: false
+              aws_site_source_folder: 'upload'
