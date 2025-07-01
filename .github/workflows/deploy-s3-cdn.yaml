@@ -1,0 +1,26 @@
+name: Deploy S3 CDN
+on:
+    workflow_dispatch:
+        inputs:
+            environment:
+                description: Environment name
+                required: true
+
+jobs:
+    Deploy-S3-CDN:
+        runs-on: ubuntu-latest
+
+        steps:
+          - name: Create S3 Bucket
+            uses: bitovi/github-actions-deploy-static-site-to-aws@v0.2.3
+            with:
+              aws_access_key_id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+              aws_secret_access_key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+              aws_default_region: us-east-1
+
+              tf_action: 'apply'
+              tf_state_bucket_destroy: false # If destroying, will remove the bucket
+              tf_state_bucket: 'annuity-association-static-assets'
+
+              aws_site_cdn_enabled: false
+              aws_site_source_folder: 'upload'
