@@ -20,7 +20,7 @@ jobs:
 
               tf_action: 'apply'
               tf_state_bucket_destroy: false # If destroying, will remove the bucket
-              aws_site_bucket_name: 'annuity-association-static-assets'
+              aws_site_bucket_name: 'annuity-association-static-assets-staging'
 
               aws_site_cdn_enabled: false
               aws_site_source_folder: 'upload'
