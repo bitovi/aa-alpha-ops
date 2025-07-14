@@ -96,6 +96,8 @@ jobs:
           echo "INDEX_STANDARD_API_BASE_URL=${{ vars.INDEX_STANDARD_API_BASE_URL }}" >> .env
           echo "INDEX_STANDARD_API_KEY=${{ secrets.INDEX_STANDARD_API_KEY }}" >> .env
           echo "TEMPORAL_CLOUD_API_KEY=${{ secrets.TEMPORAL_CLOUD_API_KEY }}" >> .env
+          echo "CLERK_SECRET_KEY=${{ secrets.CLERK_SECRET_KEY }}" >> .env
+          echo "CLERK_PUBLISHABLE_KEY=${{ secrets.CLERK_PUBLISHABLE_KEY }}" >> .env
           echo ".env file created"
           cat .env
           cd ..
